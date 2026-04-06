@@ -1,0 +1,19 @@
+<?php
+
+namespace App\Models;
+
+use Illuminate\Database\Eloquent\Model;
+
+class Setting extends Model
+{
+    protected $fillable = ['group', 'key', 'value'];
+
+    protected $casts = [
+        'value' => 'json',
+    ];
+
+    public static function getHomeSettings()
+    {
+        return self::where('group', 'home')->pluck('value', 'key')->toArray();
+    }
+}
