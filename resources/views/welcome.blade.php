@@ -69,19 +69,25 @@
                             <h2>Enquire Now</h2>
                             <p>Book Your Seat Today!</p>
                         </div>
-                        <form action="{{ route('enquiry.store') }}" method="POST" id="enquiryForm">
+                        <form action="{{ route('enquiry.store') }}" method="POST" id="enquiryForm" novalidate>
                             @csrf
-                            <div class="form-group input-icon">
-                                <i class="fa-regular fa-user"></i>
-                                <input type="text" name="name" placeholder="Full Name" required>
+                            <div class="form-group">
+                                <div class="input-icon">
+                                    <i class="fa-regular fa-user"></i>
+                                    <input type="text" name="name" placeholder="Full Name" required>
+                                </div>
                             </div>
-                            <div class="form-group input-icon">
-                                <i class="fa-solid fa-phone"></i>
-                                <input type="tel" name="phone" placeholder="Mobile Number" required>
+                            <div class="form-group">
+                                <div class="input-icon">
+                                    <i class="fa-solid fa-phone"></i>
+                                    <input type="tel" name="phone" placeholder="Mobile Number" required>
+                                </div>
                             </div>
-                            <div class="form-group input-icon">
-                                <i class="fa-regular fa-envelope"></i>
-                                <input type="email" name="email" placeholder="Email Address" required>
+                            <div class="form-group">
+                                <div class="input-icon">
+                                    <i class="fa-regular fa-envelope"></i>
+                                    <input type="email" name="email" placeholder="Email Address" required>
+                                </div>
                             </div>
                             <div class="form-group group-label">
                                 <label>Interested In</label>
@@ -97,10 +103,11 @@
                             <div class="form-group">
                                 <textarea name="message" placeholder="Message (Optional)" rows="2"></textarea>
                             </div>
-                            <button type="submit" class="submit-btn" id="submitBtn">Submit Enquiry</button>
-                            <div id="formLoader" style="display:none; text-align:center; margin-top:10px;">
-                                <i class="fa-solid fa-circle-notch fa-spin text-primary" style="font-size: 24px;"></i>
-                            </div>
+                            <button type="submit" class="submit-btn" id="submitBtn">
+                                <span>Submit Enquiry</span>
+                                <i class="fa-solid fa-circle-notch fa-spin d-none" id="btnSpinner"></i>
+                            </button>
+                            <div id="formMessage" style="display:none;"></div>
                         </form>
 
                         <div class="contact-info-card">
@@ -256,7 +263,6 @@
         gsap.from(".course-box", {
             opacity: 0,
             duration: 0.6,
-            stagger: 0.1,
             scrollTrigger: {
                 trigger: ".courses-section",
                 start: "top 80%"
@@ -297,9 +303,19 @@
         form.addEventListener('submit', async (e) => {
             e.preventDefault();
             const btn = document.getElementById('submitBtn');
-            const loader = document.getElementById('formLoader');
-            btn.style.display = 'none';
-            loader.style.display = 'block';
+            const btnText = btn.querySelector('span');
+            const btnSpinner = btn.querySelector('#btnSpinner');
+            const messageDiv = document.getElementById('formMessage');
+
+            // Reset
+            btn.classList.add('loading');
+            btnText.classList.add('d-none');
+            btnSpinner.classList.remove('d-none');
+            messageDiv.style.display = 'none';
+            messageDiv.className = '';
+            document.querySelectorAll('.form-group').forEach(el => el.classList.remove('has-error'));
+            document.querySelectorAll('.invalid-feedback').forEach(el => el.remove());
+
             const formData = new FormData(form);
             try {
                 const response = await fetch(form.action, {
@@ -311,17 +327,44 @@
                     }
                 });
                 const result = await response.json();
+
                 if (response.ok) {
-                    alert('Enquiry submitted successfully!');
+                    messageDiv.innerText = result.message || 'Enquiry submitted successfully!';
+                    messageDiv.classList.add('success');
+                    messageDiv.style.display = 'block';
                     form.reset();
+
+                    // Hide message after 3 seconds
+                    setTimeout(() => {
+                        messageDiv.style.display = 'none';
+                    }, 3000);
+                } else if (response.status === 422) {
+                    // Validation errors
+                    const errors = result.errors;
+                    Object.keys(errors).forEach(key => {
+                        const input = form.querySelector(`[name="${key}"]`);
+                        if (input) {
+                            const group = input.closest('.form-group');
+                            group.classList.add('has-error');
+                            const errorEl = document.createElement('div');
+                            errorEl.className = 'invalid-feedback';
+                            errorEl.innerText = errors[key][0];
+                            group.appendChild(errorEl);
+                        }
+                    });
                 } else {
-                    alert('Error: ' + (result.message || 'Something went wrong'));
+                    messageDiv.innerText = result.message || 'Something went wrong. Please try again.';
+                    messageDiv.classList.add('error');
+                    messageDiv.style.display = 'block';
                 }
             } catch (error) {
-                alert('Success! (Check mail in backend)');
+                messageDiv.innerText = 'Unable to connect to the server.';
+                messageDiv.classList.add('error');
+                messageDiv.style.display = 'block';
             } finally {
-                btn.style.display = 'block';
-                loader.style.display = 'none';
+                btn.classList.remove('loading');
+                btnText.classList.remove('d-none');
+                btnSpinner.classList.add('d-none');
             }
         });
     </script>

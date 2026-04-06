@@ -15,7 +15,7 @@ class EnquiryController extends Controller
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:20',
             'email' => 'required|email|max:255',
-            'course' => 'nullable|string',
+            'course' => 'required|string',
             'message' => 'nullable|string',
         ]);
 

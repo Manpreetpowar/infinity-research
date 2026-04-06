@@ -12,6 +12,10 @@
     --transition: all 0.3s ease;
 }
 
+.d-none {
+    display: none !important;
+}
+
 * {
     margin: 0;
     padding: 0;
@@ -244,6 +248,11 @@ body {
     position: relative;
 }
 
+.input-icon {
+    position: relative;
+    width: 100%;
+}
+
 .input-icon i {
     position: absolute;
     left: 15px;
@@ -308,6 +317,51 @@ body {
 .submit-btn:hover {
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(4, 36, 117, 0.4);
+}
+
+.submit-btn.loading {
+    background: transparent !important;
+    color: var(--primary-dark) !important;
+    border: 2px solid var(--primary-dark) !important;
+    pointer-events: none;
+    cursor: not-allowed;
+}
+
+.invalid-feedback {
+    color: #dc3545;
+    font-size: 0.85rem;
+    margin-top: 5px;
+    display: none;
+}
+
+.form-group.has-error input,
+.form-group.has-error select {
+    border-color: #dc3545;
+}
+
+.form-group.has-error .invalid-feedback {
+    display: block;
+}
+
+#formMessage {
+    margin-top: 15px;
+    padding: 10px 15px;
+    border-radius: 6px;
+    text-align: center;
+    font-weight: 500;
+    font-size: 0.95rem;
+}
+
+#formMessage.success {
+    background-color: #d1e7dd;
+    color: #0f5132;
+    border: 1px solid #badbcc;
+}
+
+#formMessage.error {
+    background-color: #f8d7da;
+    color: #842029;
+    border: 1px solid #f5c2c7;
 }
 
 .contact-info-card {
@@ -425,7 +479,8 @@ body {
     display: flex;
     flex-wrap: wrap;
     justify-content: center;
-    align-items: stretch; /* Ensure all cards have same height */
+    align-items: flex-start;
+    /* Corrected to prevent baseline shifts */
     gap: 20px;
 }
 
@@ -436,13 +491,17 @@ body {
     border-radius: 12px;
     text-align: center;
     flex: 1;
-    min-width: 200px; /* Sized for best fit */
-    max-width: 230px; /* Prevent being too wide on large screens */
+    min-width: 200px;
+    /* Sized for best fit */
+    max-width: 230px;
+    /* Prevent being too wide on large screens */
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
     transition: transform 0.3s;
     display: flex;
     flex-direction: column;
-    justify-content: flex-start; /* Keep icons at the top */
+    justify-content: flex-start;
+    align-self: flex-start;
+    /* Ensure all boxes are vertically aligned at the top */
 }
 
 .course-box:hover {
