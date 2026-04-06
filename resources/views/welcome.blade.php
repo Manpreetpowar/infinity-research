@@ -254,7 +254,6 @@
             .from(".hero-form-wrapper", { x: 50, opacity: 0, duration: 0.8, ease: "power2.out" }, "-=0.5");
 
         gsap.from(".course-box", {
-            y: 50,
             opacity: 0,
             duration: 0.6,
             stagger: 0.1,
