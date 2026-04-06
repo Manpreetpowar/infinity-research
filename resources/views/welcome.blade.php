@@ -29,8 +29,8 @@
                 </ul>
             </nav>
             <div class="header-action">
-                <a href="tel:9779515400" class="phone-btn">
-                    <i class="fa-solid fa-phone"></i> 9779515400
+                <a href="tel:{{ $settings['contact_phone'] ?? '9779515400' }}" class="phone-btn">
+                    <i class="fa-solid fa-phone"></i> {{ $settings['contact_phone'] ?? '9779515400' }}
                 </a>
             </div>
         </div>
@@ -219,7 +219,7 @@
                 </div>
             </div>
             <div class="footer-right">
-                <a href="https://wa.me/919779515400" class="btn-whatsapp">
+                <a href="https://wa.me/{{ $settings['whatsapp_number'] ?? '919779515400' }}" class="btn-whatsapp">
                     <i class="fa-brands fa-whatsapp"></i> Join WhatsApp
                 </a>
             </div>
