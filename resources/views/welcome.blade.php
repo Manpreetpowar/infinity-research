@@ -5,6 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Infinity Capital Research | Become a Smart Trader</title>
+    <link rel="icon" type="image/x-icon" href="{{ $settings['website_favicon'] ?? '/favicon.ico' }}">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="{{ asset('css/style.css') }}">
@@ -16,7 +17,7 @@
     <header class="header">
         <div class="header-container">
             <div class="logo">
-                <img src="/images/logo.png" alt="Infinity Capital Research">
+                <img src="{{ $settings['website_logo'] ?? '/images/logo.png' }}" alt="Infinity Capital Research">
             </div>
             <nav class="nav-menu">
                 <ul>

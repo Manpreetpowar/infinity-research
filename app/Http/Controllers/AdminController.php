@@ -61,8 +61,8 @@ class AdminController extends Controller
 
     public function updateSettings(Request $request)
     {
-        $path = storage_path('app/cms.json');
-        $cmsData = file_exists($path) ? (json_decode(file_get_contents($path), true) ?? []) : [];
+        $configPath = storage_path('app/cms.json');
+        $cmsData = file_exists($configPath) ? (json_decode(file_get_contents($configPath), true) ?? []) : [];
 
         // request()->all() comes as [ 'field_key' => 'new_value' ]
         $inputs = $request->except(['_token', '_method']);
@@ -70,7 +70,12 @@ class AdminController extends Controller
         foreach ($cmsData as $sectionKey => &$section) {
             if (isset($section['fields'])) {
                 foreach ($section['fields'] as $fieldKey => &$field) {
-                    if (isset($inputs[$fieldKey])) {
+                    if ($field['type'] === 'image' && $request->hasFile($fieldKey)) {
+                        $file = $request->file($fieldKey);
+                        $fileName = time() . '_' . $file->getClientOriginalName();
+                        $logoPath = $file->storeAs('logos', $fileName, 'public');
+                        $field['value'] = Storage::url($logoPath);
+                    } elseif (isset($inputs[$fieldKey])) {
                         $value = $inputs[$fieldKey];
 
                         // Parse JSON strings back to arrays if the field expects it
@@ -87,7 +92,7 @@ class AdminController extends Controller
             }
         }
 
-        file_put_contents($path, json_encode($cmsData, JSON_PRETTY_PRINT));
+        file_put_contents($configPath, json_encode($cmsData, JSON_PRETTY_PRINT));
 
         return back()->with('success', 'JSON Settings updated successfully!');
     }

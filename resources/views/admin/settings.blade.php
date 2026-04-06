@@ -9,7 +9,7 @@
         </div>
     </div>
 
-    <form action="{{ route('admin.settings.update') }}" method="POST">
+    <form action="{{ route('admin.settings.update') }}" method="POST" enctype="multipart/form-data">
         @csrf
 
         <div class="row">
@@ -33,6 +33,18 @@
                                         @elseif($field['type'] === 'textarea')
                                             <textarea name="{{ $fieldKey }}" class="form-control"
                                                 rows="3">{{ old($fieldKey, $field['value']) }}</textarea>
+                                        @elseif($field['type'] === 'image')
+                                            <div class="mb-3">
+                                                @if($field['value'])
+                                                    <div class="p-2 border rounded bg-light mb-2 d-inline-block">
+                                                        <img src="{{ $field['value'] }}" class="img-fluid"
+                                                            style="max-height: 80px;" alt="{{ $field['label'] }}">
+                                                    </div>
+                                                @endif
+                                                <input type="file" name="{{ $fieldKey }}" class="form-control"
+                                                    accept="image/*">
+                                                <div class="form-text">Upload a new logo image (PNG, JPG, SVG recommended).</div>
+                                            </div>
                                         @elseif($field['type'] === 'array' || $field['type'] === 'array_simple')
                                             <div class="alert alert-secondary border-0 p-3 mb-0">
                                                 <div class="d-flex justify-content-between mb-2">
